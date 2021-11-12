@@ -91,83 +91,59 @@ site4$site <- rep(4)
 
 data_all <- bind_rows(site1, site2, site3, site4)
 
-data_all$light_treatment <- data_all$notes
-
 data_all <- select(data_all, -obs)
-data_all <- select(data_all, date, site, plot, measurement, light_treatment, notes, everything())
+data_all <- select(data_all, date, site, plot, measurement, notes, everything())
 
-data_all$measurement[data_all$measurement == "NEE" |
+data_all$measurement[data_all$measurement == "nee" |
                        data_all$measurement == "ne" |
                        data_all$measurement == "NEE " |
                        data_all$measurement == "Nee" |
-                       data_all$measurement == " nee"] <- "nee"
-data_all$measurement[data_all$measurement == "ER" |
-                       data_all$measurement == "ner"] <- "er"
-
-data_all$light_treatment[data_all$light_treatment == "6c redo" |
-                           data_all$light_treatment == "9c redo" |
-                           data_all$light_treatment == "sheer redo" |
-                           data_all$light_treatment == "13w l redo" |
-                           data_all$light_treatment == "11c shade1 redo" |
-                           data_all$light_treatment == "16w sheer redo" |
-                           data_all$light_treatment == "6w redo" |
-                           data_all$light_treatment == "light redo" |
-                           data_all$light_treatment == "12c light redo" |
-                           data_all$light_treatment == "redo" |
-                           data_all$light_treatment == "redo both" |
-                           data_all$light_treatment == "cant read ht" |
-                           data_all$light_treatment == "dont know ht" |
-                           data_all$light_treatment == " "] <- ""
-data_all$light_treatment[data_all$light_treatment == "d" |
-                           data_all$light_treatment == "dr" |
-                           data_all$light_treatment == "black" |
-                           data_all$light_treatment == "darklight" |
-                           data_all$light_treatment == "dark1" |
-                           data_all$light_treatment == "dark, wrong collar ht" |
-                           data_all$light_treatment == "dark, skipped shade2"] <- "dark"
-data_all$light_treatment[data_all$light_treatment == "lght" |
-                           data_all$light_treatment == "l"] <- "light"
-data_all$light_treatment[data_all$light_treatment == "shade "] <- "shade"
-data_all$light_treatment[data_all$light_treatment == "shade 1" |
-                           data_all$light_treatment == "shade 1 now" |
-                           data_all$light_treatment == "shade 1, wrong collar ht.     ade" |
-                           data_all$light_treatment == "single shade" |
-                           data_all$light_treatment == "shade1 "] <- "shade1"
-data_all$light_treatment[data_all$light_treatment == "shade 2" |
-                           data_all$light_treatment == "shade 2, wrong collar ht. " |
-                           data_all$light_treatment == "double shade"] <- "shade2"
-data_all$light_treatment[data_all$light_treatment == "sher" |
-                           data_all$light_treatment == "sheer1"] <- "sheer"
-data_all$light_treatment[data_all$light_treatment == "sheer doubled"] <- "sheer2"
+                       data_all$measurement == " nee"] <- "NEE"
+data_all$measurement[data_all$measurement == "er" |
+                       data_all$measurement == "ner"] <- "ER"
+data_all$measurement[data_all$measurement == "NEE OR ER" |
+                       data_all$measurement == "NEE or ER"] <- ""
 
 data_all$notes[data_all$notes == "d" |
-                 data_all$notes == "dr" |
-                 data_all$notes == "black" |
-                 data_all$notes == "darklight" |
-                 data_all$notes == "dark" |
-                 data_all$notes == "dark1" |
-                 data_all$notes == "dark2" |
-                 data_all$notes == "dark, wrong collar ht" |
-                 data_all$notes == "dark, skipped shade2" |
-                 data_all$notes == "lght" |
-                 data_all$notes == "light" |
+                           data_all$notes == "dr" |
+                           data_all$notes == "black" |
+                           data_all$notes == "dark, wrong collar ht" |
+                           data_all$notes == "dark, skipped shade2"] <- "dark"
+data_all$notes[data_all$notes == "lght" |
                  data_all$notes == "l" |
-                 data_all$notes == "shade" |
+                 data_all$notes == "high"] <- "light"
+data_all$notes[data_all$notes == "shade 1" |
                  data_all$notes == "shade " |
-                 data_all$notes == "shade1" |
-                 data_all$notes == "shade 1" |
                  data_all$notes == "shade 1 now" |
                  data_all$notes == "shade 1, wrong collar ht.     ade" |
                  data_all$notes == "single shade" |
                  data_all$notes == "shade1 " |
+                 data_all$notes == "shade1" |
                  data_all$notes == "shade2" |
                  data_all$notes == "shade 2" |
                  data_all$notes == "shade 2, wrong collar ht. " |
                  data_all$notes == "double shade" |
-                 data_all$notes == "sher" |
                  data_all$notes == "sheer" |
+                 data_all$notes == "sher" |
                  data_all$notes == "sheer1" |
                  data_all$notes == "sheer doubled" |
-                 data_all$notes == " "] <- ""
+                 data_all$notes == "kelly shadow" |
+                 data_all$notes == "shadow" |
+                 data_all$notes == "kelly + cloth" |
+                 data_all$notes == "dark1" |
+                           data_all$notes == "dark2" |
+                           data_all$notes == "darklight"] <- "shade"
 
-unique(data_all$light_treatment)
+data_all <- subset(data_all, notes != "shade")
+
+data_all$measurement[data_all$notes == "light"] <- "NEE"
+data_all$measurement[data_all$notes == "dark"] <- "ER"
+
+data_all$notes[data_all$notes == " " |
+                 data_all$notes == "light" |
+                 data_all$notes == "dark"] <- ""
+
+data_all$measurement[data_all$measurement == "" & data_all$Qamb_out > 30] <- "NEE"
+data_all$measurement[data_all$measurement == "" & data_all$Qamb_out < 30] <- "ER"
+
+write.csv(data_all, "data_all.csv")
