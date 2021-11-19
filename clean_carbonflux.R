@@ -68,19 +68,19 @@ site4 <- list.files(path = "./site 4/",
 
 # create list of column names
 col_names <- c("obs", "sys_time", "elapsed", "date", "sys_hhmmss", "vtot", "rho", "Flux", "virga", 
-           "vchamber", "area", "R", "collar_offset", "plot", "measurement", "notes", 
-           "gasex_time", "E", "A", "RHcham", "VPcham", "SVPcham", "Leak", "LeakPct", "CorrFact", 
-           "CorrFactPct", "Fan", "Qin", "Qabs", "alpha","convert", "S", "meas_time", "CO2_s", 
-           "CO2_r", "H2O_s", "H2O_r", "Flow", "Pa", "ΔPcham", "Tair", "Tleaf", "Tleaf2", 
-           "Fan_speed", "Qamb_in", "Qamb_out", "match_time", "match_hhmmss", "count", "co2_adj", 
-           "h2o_adj", "co2_at", "h2o_at", "co2_cv", "h2o_cv",
-           "CO2_s_d:MN", "CO2_s_d:SLP", "CO2_s_d:SD", "CO2_s_d:OK", "Stable", "Total", 
-           "State", "ADC_CH1", "ADC_CH2", "ADC_CH3", "ADC_CH4", "ADC_CH5", "ADC_CH6", 
-           "ADC_CH7", "ADC_CH8", "DAC_1", "DAC_2", "DAC_3", "DAC_4", "GPIO", "GPIO_dir",
-           "excit_5v", "power_12v", "power_5v", "ch1_pullup", "AuxPower", "MatchValveR", 
-           "MatchValveS", "MatchCO2", "MatchH2O", "DIAG", "Flow_s", "Flow_r", "Txchg", 
-           "Tirga", "Tchopper", "Ts", "Tr", "CO2_%", "Desiccant_%", "Humidifier_%", 
-           "Txchg_sp", "CO2_r_sp", "H2O_r_sp", "SS_s", "SS_r")
+               "vchamber", "area", "R", "collar_offset", "plot", "measurement", "notes", 
+               "gasex_time", "E", "A", "RHcham", "VPcham", "SVPcham", "Leak", "LeakPct", "CorrFact", 
+               "CorrFactPct", "Fan", "Qin", "Qabs", "alpha","convert", "S", "meas_time", "CO2_s", 
+               "CO2_r", "H2O_s", "H2O_r", "Flow", "Pa", "ΔPcham", "Tair", "Tleaf", "Tleaf2", 
+               "Fan_speed", "Qamb_in", "Qamb_out", "match_time", "match_hhmmss", "count", "co2_adj", 
+               "h2o_adj", "co2_at", "h2o_at", "co2_cv", "h2o_cv",
+               "CO2_s_d:MN", "CO2_s_d:SLP", "CO2_s_d:SD", "CO2_s_d:OK", "Stable", "Total", 
+               "State", "ADC_CH1", "ADC_CH2", "ADC_CH3", "ADC_CH4", "ADC_CH5", "ADC_CH6", 
+               "ADC_CH7", "ADC_CH8", "DAC_1", "DAC_2", "DAC_3", "DAC_4", "GPIO", "GPIO_dir",
+               "excit_5v", "power_12v", "power_5v", "ch1_pullup", "AuxPower", "MatchValveR", 
+               "MatchValveS", "MatchCO2", "MatchH2O", "DIAG", "Flow_s", "Flow_r", "Txchg", 
+               "Tirga", "Tchopper", "Ts", "Tr", "CO2_%", "Desiccant_%", "Humidifier_%", 
+               "Txchg_sp", "CO2_r_sp", "H2O_r_sp", "SS_s", "SS_r")
 
 # add column names
 names(site1) <- col_names
@@ -96,6 +96,9 @@ site4$site <- rep(4)
 
 # combine all sites into one dataset
 data_all <- bind_rows(site1, site2, site3, site4)
+
+# remove measurements that were redone
+data_all <- subset(data_all, notes != "redone")
 
 # create warming treatment column
 data_all <- separate(data = data_all, col = plot, into = c("plot_id", "treatment"), sep = "(?<=[0-9])(?=[A-Za-z])", remove = FALSE)
