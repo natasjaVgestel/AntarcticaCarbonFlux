@@ -105,11 +105,11 @@ data_all <- separate(data = data_all, col = plot, into = c("plot_id", "treatment
 data_all$treatment[data_all$treatment == "c"] <- "control"
 data_all$treatment[data_all$treatment == "w"] <- "warming"
 
-data_all <- select(data_all, -plot_id)
+data_all <- dplyr::select(data_all, -plot_id)
 
 # remove obs column and reorder remaining columns
-data_all <- select(data_all, -obs)
-data_all <- select(data_all, date, site, plot, treatment, measurement, notes, everything())
+data_all <- dplyr::select(data_all, -obs)
+data_all <- dplyr::select(data_all, date, site, plot, treatment, measurement, notes, everything())
 
 # consolidate measurement naming
 data_all$measurement[data_all$measurement == "nee" |
